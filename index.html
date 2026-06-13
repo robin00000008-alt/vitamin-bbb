@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>비타민 B1, 뇌까지 잘 전달될까? — BBB 투과성 탐구</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+:root{
+  --ink:#0F1B2D;
+  --card:#18253D;
+  --line:#2A3C5C;
+  --text:#E8EEF7;
+  --muted:#8298BD;
+  --permeate:#5FE3B0;
+  --block:#FF8C73;
+  --moderate:#F0C75E;
+  --membrane:#3D5A82;
+  --water:#6FB8E8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--ink);color:var(--text);line-height:1.65;padding:28px 16px 70px;font-size:15px}
+h1,h2,h3{font-family:'Fraunces',Georgia,serif;font-weight:600}
+.container{max-width:1080px;margin:0 auto;position:relative}
+
+/* ===== Export/Copy Button & Modal ===== */
+.download-btn {
+  position: absolute;
+  top: -10px;
+  right: 0;
+  background: var(--line);
+  color: var(--text);
+  border: 1px solid var(--muted);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+  font-family: 'Inter', sans-serif;
+  z-index: 100;
+}
+.download-btn:hover {
+  background: var(--permeate);
+  color: var(--ink);
+  border-color: var(--permeate);
+}
+@media (max-width: 768px) {
+  .download-btn { position: static; display: block; width: 100%; text-align: center; margin-bottom: 20px; }
+}
+
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 27, 45, 0.85); z-index: 999; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); }
+.modal-overlay.active { display: flex; }
+.modal-box { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 24px; max-width: 640px; width: 100%; box-shadow: 0 10px 40px rgba(0,0,0,0.6); }
+.modal-box h3 { margin-bottom: 10px; font-size: 20px; }
+.modal-box p { font-size: 14px; color: var(--muted); margin-bottom: 16px; line-height: 1.5; }
+.modal-box textarea { width: 100%; height: 240px; background: var(--ink); color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 12px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; margin-bottom: 16px; resize: vertical; white-space: pre; }
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+.btn-copy { background: var(--permeate); color: var(--ink); border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.2s; }
+.btn-copy:hover { opacity: 0.9; }
+.btn-close { background: transparent; color: var(--text); border: 1px solid var(--line); padding: 10px 20px; border-radius: 8px; cursor: pointer; font-family: 'Inter', sans-serif; }
+.btn-close:hover { background: rgba(255,255,255,0.05); }
+
+/* ===== layout helpers ===== */
+section{margin:52px 0}
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--moderate);letter-spacing:.18em;text-transform:uppercase;margin-bottom:8px}
+section > h2{font-size:23px;margin-bottom:6px}
+.section-sub{color:var(--muted);font-size:14px;max-width:680px;margin-bottom:18px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px}
+
+/* ===== explain callout ===== */
+.explain{background:rgba(240,199,94,.06);border-left:3px solid var(--moderate);border-radius:0 12px 12px 0;padding:14px 18px;font-size:14px;color:#C9D4E8;margin:14px 0}
+.explain strong{color:var(--text)}
+
+/* ===== header ===== */
+header{text-align:center;padding:36px 0 8px}
+header .eyebrow{justify-content:center;display:flex}
+header h1{font-size:clamp(26px,5vw,42px);margin:8px 0}
+header p{color:var(--muted);max-width:640px;margin:10px auto 0;font-size:14.5px}
+
+/* ===== hypothesis cards ===== */
+.hypotheses{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin-top:18px}
+.hyp-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column}
+.hyp-num{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--moderate);letter-spacing:.1em}
+.hyp-card h3{font-size:16px;margin:8px 0}
+.hyp-card .hyp-text{font-size:13.5px;color:#C9D4E8;flex:1}
+.hyp-status{margin-top:12px;font-size:11.5px;font-family:'IBM Plex Mono',monospace;padding:4px 10px;border-radius:8px;display:inline-block}
+.hyp-status.good{background:rgba(95,227,176,.14);color:var(--permeate)}
+.hyp-status.bad{background:rgba(240,199,94,.14);color:var(--moderate)}
+.hyp-detail{font-size:12.5px;color:var(--muted);margin-top:6px}
+
+/* ===== signal cards (4 criteria) ===== */
+.signals{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin-top:18px}
+.signal-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+.signal-card svg{width:64px;height:64px;display:block;margin-bottom:10px}
+.signal-card h3{font-size:15.5px}
+.signal-card .tagline{font-size:12px;color:var(--moderate);font-family:'IBM Plex Mono',monospace;margin-top:2px}
+.signal-card p{font-size:13px;color:#C9D4E8;margin-top:10px}
+.signal-card .threshold{display:inline-block;margin-top:10px;font-family:'IBM Plex Mono',monospace;font-size:11px;background:rgba(240,199,94,.12);color:var(--moderate);padding:3px 9px;border-radius:6px}
+
+/* ===== membrane viz ===== */
+.legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px;font-size:12px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+
+/* ===== molecule grid ===== */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:18px}
+.mol-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;display:flex;flex-direction:column}
+.role-tag{font-size:10.5px;font-family:'IBM Plex Mono',monospace;padding:3px 9px;border-radius:8px;display:inline-block;width:fit-content}
+.role-tag.baseline{background:rgba(255,140,115,.12);color:var(--block)}
+.role-tag.derivative{background:rgba(95,227,176,.12);color:var(--permeate)}
+.role-tag.prodrug-before{background:rgba(240,199,94,.12);color:var(--moderate)}
+.role-tag.prodrug-after{background:rgba(95,227,176,.12);color:var(--permeate)}
+.mol-card h3{font-size:17px;margin-top:8px}
+.mol-card .en{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--muted);margin-top:2px}
+
+.smiles{width:100%;background:var(--ink);border:1px solid var(--line);border-radius:8px;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:11px;padding:8px;margin:10px 0 4px;resize:vertical;min-height:46px}
+.smiles:focus{outline:1px solid var(--permeate)}
+
+.structure{background:#fff;border-radius:10px;padding:6px;margin:8px 0;min-height:160px;display:flex;align-items:center;justify-content:center}
+.structure svg{max-width:100%;height:auto}
+
+/* gauges */
+.gauges{margin:10px 0}
+.gauge{margin-bottom:9px}
+.gauge-row{display:flex;justify-content:space-between;font-size:11.5px;font-family:'IBM Plex Mono',monospace;margin-bottom:4px}
+.gauge-row .gv.good{color:var(--permeate)}
+.gauge-row .gv.bad{color:var(--block)}
+.gauge-track{position:relative;height:8px;background:var(--ink);border-radius:4px;border:1px solid var(--line)}
+.gauge-zone{position:absolute;top:0;bottom:0;background:rgba(95,227,176,.18);border-radius:4px}
+.gauge-marker{position:absolute;top:-3px;width:3px;height:14px;border-radius:2px}
+.gauge-marker.good{background:var(--permeate)}
+.gauge-marker.bad{background:var(--block)}
+
+.charge-row{display:flex;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:11px;margin-bottom:8px}
+.charge-state{flex:1;text-align:center;padding:5px 4px;border-radius:6px;border:1px solid var(--line);color:var(--muted)}
+.charge-state.active.good{background:rgba(95,227,176,.14);color:var(--permeate);border-color:var(--permeate)}
+.charge-state.active.bad{background:rgba(255,140,115,.14);color:var(--block);border-color:var(--block)}
+
+.ref-info{font-size:11px;color:var(--muted);margin:2px 0 10px;font-family:'IBM Plex Mono',monospace}
+
+.verdict{text-align:center;font-family:'Fraunces',serif;font-size:17px;padding:9px;border-radius:10px;margin-top:auto}
+.verdict.High{background:rgba(95,227,176,.14);color:var(--permeate)}
+.verdict.Moderate{background:rgba(240,199,94,.14);color:var(--moderate)}
+.verdict.Low{background:rgba(255,140,115,.14);color:var(--block)}
+.verdict.err{background:rgba(255,140,115,.14);color:var(--block);font-size:13px}
+
+.loading{text-align:center;padding:50px 20px;color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:13px}
+
+/* ===== prodrug spotlight ===== */
+.prodrug-compare{display:grid;grid-template-columns:1fr auto 1fr;gap:18px;align-items:center;margin-top:18px}
+@media (max-width:680px){.prodrug-compare{grid-template-columns:1fr}}
+.prodrug-side{background:var(--ink);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center}
+.prodrug-side h3{font-size:16px;margin:6px 0}
+.prodrug-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:12px;margin:10px 0}
+.prodrug-stats > div{background:var(--card);border-radius:6px;padding:6px}
+.prodrug-arrow{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+.prodrug-arrow svg{width:70px;height:50px}
+@media (max-width:680px){.prodrug-arrow svg{transform:rotate(90deg)}}
+.prodrug-arrow .label{font-size:11.5px;color:var(--muted);max-width:140px}
+#prodrugSummary{margin-top:18px;font-size:14px;color:#C9D4E8}
+#prodrugSummary strong{color:var(--text)}
+
+/* ===== conclusion table ===== */
+.conclusion-table{width:100%;border-collapse:collapse;margin-top:6px;font-size:13.5px}
+.conclusion-table th,.conclusion-table td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left}
+.conclusion-table th{color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+#conclusionText{margin-top:16px;font-size:14px;color:#C9D4E8}
+#conclusionText strong{color:var(--text)}
+
+/* ===== explorer ===== */
+.explorer .input-group { display: flex; gap: 10px; align-items: stretch; margin-top: 10px; flex-wrap: wrap; }
+.explorer input[type=text]{ flex: 1; min-width: 200px; background: var(--ink); border: 1px solid var(--line); border-radius: 8px; color: var(--text); font-family: 'IBM Plex Mono', monospace; padding: 11px 14px; font-size: 13px; }
+.explorer .calc-btn{ background: var(--permeate); color: var(--ink); border: none; padding: 10px 22px; border-radius: 8px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; white-space: nowrap; }
+.explorer .calc-btn:hover{ opacity: .88; }
+
+.preset-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.preset-btn { background: rgba(95,227,176,.08); color: var(--permeate); border: 1px solid rgba(95,227,176,.3); padding: 7px 12px; border-radius: 6px; font-size: 13px; cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif; }
+.preset-btn:hover { background: rgba(95,227,176,.2); border-color: var(--permeate); }
+
+footer{text-align:center;color:var(--muted);font-size:12px;margin-top:50px}
+footer p{margin:4px 0}
+</style>
+</head>
+<body>
+
+<!-- 변경 전 원본 코드를 안전하게 보관하기 위한 스크립트 -->
+<script>
+  window.pristineHTML = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+</script>
+
+<!-- 모달 UI -->
+<div id="exportModal" class="modal-overlay">
+  <div class="modal-box">
+    <h3>파일로 저장하는 방법</h3>
+    <p>현재 안전한 샌드박스 환경(미리보기)에서 실행 중이므로 브라우저의 직접 다운로드 기능이 제한되어 있습니다. <br>아래 <strong>[코드 복사하기]</strong> 버튼을 누른 뒤, 메모장(Notepad)에 붙여넣기(Ctrl+V)하고 파일 이름을 <strong>bbb_explorer.html</strong> 로 저장하시면 됩니다.</p>
+    <textarea id="sourceCodeArea" readonly></textarea>
+    <div class="modal-actions">
+      <button class="btn-close" onclick="closeExportModal()">닫기</button>
+      <button id="copyBtn" class="btn-copy" onclick="copySourceCode()">코드 복사하기 📋</button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- 수정된 다운로드 버튼 -->
+<button class="download-btn" onclick="openExportModal()">내 컴퓨터에 HTML로 저장하기 💾</button>
+
+<header>
+  <div class="eyebrow">탐구 보고서 · 인터랙티브 도구</div>
+  <h1>비타민 B1, 정말 뇌까지 잘 전달될까?</h1>
+  <p>우리 몸은 비타민 B1(티아민)을 에너지 생산에 꼭 사용하지만, 뇌로 가는 길에는 '혈액뇌장벽(BBB)'이라는 까다로운 검문소가 있습니다.
+  시판되는 티아민 유도체들은 정말 이 검문소를 더 쉽게 통과할까요? 분자 구조를 RDKit으로 직접 계산해서 확인해봅니다.</p>
+</header>
+
+<!-- ============ STEP 01 : 탐구 질문 & 가설 ============ -->
+<section>
+  <div class="eyebrow">Step 01 — 탐구 질문과 가설</div>
+  <h2>우리가 확인하고 싶은 3가지</h2>
+  <p class="section-sub">아래 3가지는 이 탐구의 핵심 가설입니다. 페이지 아래에서 분자 계산이 끝나면, 각 가설이 데이터로 확인되는지 여기서 바로 알려드립니다.</p>
+  <div class="hypotheses">
+    <div class="hyp-card">
+      <div class="hyp-num">가설 1</div>
+      <h3>티아민 원형은 통과하기 어렵다</h3>
+      <div class="hyp-text">티아민은 양전하를 띤 채로 존재해서, 전기를 띤 입자는 세포막을 그냥 통과할 수 없다는 원리상 BBB 투과가 어려울 것입니다.</div>
+      <div id="hyp1-status" class="hyp-status">계산 대기 중...</div>
+    </div>
+    <div class="hyp-card">
+      <div class="hyp-num">가설 2</div>
+      <h3>유도체는 더 잘 통과한다</h3>
+      <div class="hyp-text">분자 구조를 살짝 바꾼 유도체(푸르설티아민 등)는 화학적 성질이 달라져 티아민보다 더 많은 통과 기준을 만족할 것입니다.</div>
+      <div id="hyp2-status" class="hyp-status">계산 대기 중...</div>
+    </div>
+    <div class="hyp-card">
+      <div class="hyp-num">가설 3</div>
+      <h3>벤포티아민은 '변신'한 뒤에야 통과하기 쉬워진다</h3>
+      <div class="hyp-text">벤포티아민은 그대로는 음전하를 띤 인산기 때문에 통과가 어렵지만, 몸속 효소가 인산기를 제거하면(S-벤조일티아민으로 변환) 성질이 달라질 것입니다.</div>
+      <div id="hyp3-status" class="hyp-status">계산 대기 중...</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STEP 02 : 4가지 신호 ============ -->
+<section>
+  <div class="eyebrow">Step 02 — 개념 이해하기</div>
+  <h2>BBB 통과를 결정하는 4가지 신호</h2>
+  <p class="section-sub">혈액뇌장벽은 마치 도서관 보안 검색대처럼, 분자의 '크기', '기름과 친한 정도', '물을 얼마나 끌어당기는지', '전기를 띠는지'를 보고 통과 여부를 결정합니다. 이 4가지를 화학적으로 측정한 값이 바로 아래의 MW · cLogP · TPSA · Charge입니다.</p>
+  <div class="signals">
+    <div class="signal-card">
+      <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+        <rect x="34" y="8" width="12" height="64" fill="var(--membrane)"/>
+        <rect x="34" y="30" width="12" height="20" fill="var(--ink)"/>
+        <circle cx="18" cy="40" r="7" fill="var(--permeate)"/>
+        <circle cx="62" cy="40" r="15" fill="var(--block)"/>
+      </svg>
+      <h3>분자량 (MW)</h3>
+      <div class="tagline">"크기가 적당한가?"</div>
+      <p>분자가 너무 크면 막의 좁은 통로를 지나가기 어렵습니다. 작은 문을 통과하려면 몸집이 너무 크면 안 되는 것과 같은 원리입니다.</p>
+      <div class="threshold">기준: 450 Da 이하</div>
+    </div>
+    <div class="signal-card">
+      <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+        <rect x="6" y="34" width="68" height="12" fill="var(--membrane)"/>
+        <circle cx="40" cy="40" r="11" fill="var(--moderate)" opacity="0.85"/>
+        <circle cx="40" cy="40" r="11" fill="none" stroke="var(--ink)" stroke-width="1"/>
+      </svg>
+      <h3>지용성 (cLogP)</h3>
+      <div class="tagline">"기름에 잘 녹는가?"</div>
+      <p>세포막은 주로 기름(지질) 성분입니다. 기름에 잘 녹을수록 막에 잘 스며들지만, 너무 잘 녹으면 막에 갇혀 반대편으로 못 나옵니다.</p>
+      <div class="threshold">기준: 0 ~ 4 사이</div>
+    </div>
+    <div class="signal-card">
+      <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="40" cy="42" r="14" fill="var(--card)" stroke="var(--text)" stroke-width="1.5"/>
+        <circle cx="20" cy="20" r="4" fill="var(--water)"/>
+        <circle cx="60" cy="20" r="4" fill="var(--water)"/>
+        <circle cx="14" cy="55" r="4" fill="var(--water)"/>
+        <circle cx="66" cy="55" r="4" fill="var(--water)"/>
+        <circle cx="40" cy="12" r="4" fill="var(--water)"/>
+      </svg>
+      <h3>극성표면적 (TPSA)</h3>
+      <div class="tagline">"물 분자를 얼마나 끌어당기나?"</div>
+      <p>분자 표면에 산소·질소처럼 물과 강하게 결합하는 부분이 많으면, 분자가 물에 둘러싸여 기름 성분의 막을 통과하기 어렵습니다.</p>
+      <div class="threshold">기준: 90 Ų 이하</div>
+    </div>
+    <div class="signal-card">
+      <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+        <rect x="34" y="8" width="12" height="64" fill="var(--membrane)"/>
+        <circle cx="18" cy="40" r="12" fill="var(--block)"/>
+        <text x="18" y="46" text-anchor="middle" fill="var(--ink)" font-size="17" font-weight="700" font-family="IBM Plex Mono">+</text>
+        <circle cx="62" cy="40" r="12" fill="var(--permeate)"/>
+        <text x="62" y="46" text-anchor="middle" fill="var(--ink)" font-size="17" font-weight="700" font-family="IBM Plex Mono">0</text>
+      </svg>
+      <h3>전하 (Charge)</h3>
+      <div class="tagline">"전기를 띠고 있는가?"</div>
+      <p>플러스(+)나 마이너스(-) 전기를 띠는 입자는 중성인 세포막을 그냥 통과하지 못합니다. 우리 몸의 pH(약 7.4)에서 전하가 0인 분자만 통과할 수 있습니다.</p>
+      <div class="threshold">기준: 전하 = 0</div>
+    </div>
+  </div>
+  <div class="explain">참고로 <strong>수소결합 공여자(HBD)</strong>와 <strong>수용체(HBA)</strong>는 TPSA와 밀접하게 연관된 보조 지표로, 분자가 물과 얼마나 많은 수소결합을 만들 수 있는지를 나타냅니다. 아래 결과 카드에 함께 표시하지만, BBB 투과 등급(High/Moderate/Low)은 위 4가지 핵심 기준으로만 판정합니다.</div>
+</section>
+
+<!-- ============ STEP 03 : 분자 비교 ============ -->
+<section>
+  <div class="eyebrow">Step 03 — 데이터로 확인하기</div>
+  <h2>4가지 분자, 한눈에 비교하기</h2>
+  <p class="section-sub">아래는 RDKit(WASM)이 각 분자의 실제 구조로부터 계산한 결과입니다. 게이지의 초록색 영역은 '통과에 유리한 범위'를 의미하고, 표시 막대(▮)가 그 안에 있으면 기준을 만족한 것입니다.</p>
+
+  <div class="panel" style="margin-bottom:20px">
+    <div id="membrane" class="loading">RDKit 모듈 로딩 중... (수 초 소요될 수 있습니다)</div>
+    <div class="legend">
+      <span><i class="dot" style="background:var(--permeate)"></i>High — 4개 기준 모두 충족, 뇌 쪽으로 투과</span>
+      <span><i class="dot" style="background:var(--moderate)"></i>Moderate — 2~3개 충족, 막 내부에 위치</span>
+      <span><i class="dot" style="background:var(--block)"></i>Low — 0~1개 충족, 혈액 쪽에서 차단</span>
+    </div>
+  </div>
+
+  <div id="grid" class="grid"></div>
+</section>
+
+<!-- ============ STEP 04 : 전구약물 스포트라이트 ============ -->
+<section>
+  <div class="eyebrow">Step 04 — 핵심 발견</div>
+  <h2>전구약물의 비밀: 벤포티아민은 어떻게 '변신'할까?</h2>
+  <p class="section-sub">벤포티아민은 강한 음전하를 띤 인산기(-OPO₃H₂)를 가지고 있어 그대로는 BBB를 통과하기 어렵습니다. 하지만 소장에서 흡수될 때 <strong style="color:var(--text)">알칼리성 인산분해효소</strong>가 이 인산기를 잘라내고, 그 결과 S-벤조일티아민이 만들어집니다. 이 변화 전후를 직접 비교해봅시다.</p>
+  <div class="panel">
+    <div id="prodrugCompare" class="prodrug-compare"><div class="loading">계산 중...</div></div>
+    <div id="prodrugSummary"></div>
+  </div>
+</section>
+
+<!-- ============ STEP 05 : 결론 ============ -->
+<section>
+  <div class="eyebrow">Step 05 — 결론</div>
+  <h2>우리의 가설은 맞았을까?</h2>
+  <div class="panel">
+    <div id="conclusionTable"><div class="loading">계산 중...</div></div>
+    <div id="conclusionText"></div>
+  </div>
+</section>
+
+<!-- ============ 직접 해보기 ============ -->
+<section class="explorer">
+  <div class="eyebrow">더 알아보기</div>
+  <h2>직접 SMILES 계산해보기</h2>
+  <div class="panel">
+    <p class="section-sub" style="margin-bottom:0">PubChem 등에서 가져온 분자의 SMILES를 직접 입력하거나, <strong>아래 예시 버튼을 클릭</strong>해보세요.</p>
+    
+    <!-- 빠른 실행 버튼들 -->
+    <div class="preset-buttons">
+      <button class="preset-btn" onclick="setCustom('CN1C=NC2=C1C(=O)N(C(=O)N2C)C', '카페인')">☕ 카페인</button>
+      <button class="preset-btn" onclick="setCustom('CC(C)CC1=CC=C(C=C1)C(C)C(=O)O', '이부프로펜')">💊 이부프로펜</button>
+      <button class="preset-btn" onclick="setCustom('C1=CC(=C(C=C1CCN)O)O', '도파민')">🧠 도파민</button>
+      <button class="preset-btn" onclick="setCustom('CC1(C(N2C(S1)C(C2=O)NC(=O)CC3=CC=CC=C3)C(=O)O)C', '페니실린 G')">💉 페니실린 G</button>
+      <button class="preset-btn" onclick="setCustom('C(C(C1C(=C(C(=O)O1)O)O)O)O', '비타민 C')">🍋 비타민 C</button>
+    </div>
+
+    <div class="input-group">
+      <input type="text" id="customSmiles" placeholder="예: CC1=C(CCO)SC=[N+]1CC1=CN=C(C)N=C1N">
+      <button class="calc-btn" onclick="analyzeCustom()">계산하기</button>
+    </div>
+    
+    <div id="customResult" style="margin-top:16px"></div>
+  </div>
+</section>
+
+<footer>
+  <p>투과 예측 기준 — MW ≤ 450 Da · 0 ≤ cLogP ≤ 4 · TPSA ≤ 90 Ų · Formal Charge = 0 (4/4 충족: High · 2~3/4: Moderate · 0~1/4: Low)</p>
+  <p>SMILES는 PubChem CID로 직접 검증 후 보고서에 사용하는 것을 권장합니다 (Thiamine CID 1130, Fursultiamine CID 16142685, Benfotiamine CID 9296, S-Benzoylthiamine CID 71415)</p>
+</footer>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@rdkit/rdkit/dist/RDKit_minimal.js"></script>
+<script>
+// --- Export / Copy Feature ---
+function openExportModal() {
+  const modal = document.getElementById('exportModal');
+  const textarea = document.getElementById('sourceCodeArea');
+  // 초기에 저장해둔 깨끗한 HTML 코드를 텍스트에리어에 삽입
+  textarea.value = window.pristineHTML;
+  modal.classList.add('active');
+}
+
+function closeExportModal() {
+  const modal = document.getElementById('exportModal');
+  modal.classList.remove('active');
+  document.getElementById('copyBtn').innerText = '코드 복사하기 📋';
+}
+
+function copySourceCode() {
+  const textarea = document.getElementById('sourceCodeArea');
+  textarea.select();
+  document.execCommand('copy');
+  
+  const btn = document.getElementById('copyBtn');
+  btn.innerText = '복사 완료! (메모장에 붙여넣으세요) ✔️';
+  setTimeout(() => {
+    if (btn.innerText.includes('복사 완료')) {
+      btn.innerText = '코드 복사하기 📋';
+    }
+  }, 3500);
+}
+
+// --- App Logic ---
+let RDKit = null;
+let results = {};
+let currentCustomName = '사용자 입력 분자';
+
+const MOLECULES = [
+  { key:'thiamine', nameKo:'티아민', nameEn:'Thiamine (B1)', role:'기준 물질', roleClass:'baseline', roleDesc:'우리 몸의 비타민 B1 그 자체', smiles:'CC1=C(CCO)SC=[N+]1CC1=CN=C(C)N=C1N' },
+  { key:'fursul',   nameKo:'푸르설티아민', nameEn:'Fursultiamine', role:'개선된 유도체', roleClass:'derivative', roleDesc:'구조를 바꿔 지용성을 높인 약물', smiles:'CC(=O)N(CC1=CN=C(C)N=C1N)C(=CSCCO)/C(C)=C\\SCCCCS(=O)(=O)O' },
+  { key:'benfo',    nameKo:'벤포티아민', nameEn:'Benfotiamine', role:'전구약물 · 변환 전', roleClass:'prodrug-before', roleDesc:'장에서 흡수되기 전 형태 (인산기 보유)', smiles:'CC1=C(CCOP(=O)(O)O)SC(=O)N1C(=CSCC1=CN=C(C)N=C1N)/C(C)=O' },
+  { key:'sbenzoyl', nameKo:'S-벤조일티아민', nameEn:'S-Benzoylthiamine', role:'전구약물 · 변환 후', roleClass:'prodrug-after', roleDesc:'효소가 인산기를 제거한 후의 형태', smiles:'CC1=C(CCO)SC(=O)N1C(=CSCC1=CN=C(C)N=C1N)/C(C)=O' }
+];
+
+window.addEventListener('load', async () => {
+  try {
+    RDKit = await initRDKitModule({ locateFile: f => `https://cdn.jsdelivr.net/npm/@rdkit/rdkit/dist/${f}` });
+    MOLECULES.forEach(m => results[m.key] = analyze(m.smiles));
+    renderGrid();
+    renderMembrane();
+    renderHypotheses();
+    renderProdrugSpotlight();
+    renderConclusion();
+  } catch (e) {
+    const msg = `RDKit 로드 실패 — 네트워크 연결을 확인하세요.<br><span style="font-size:11px">${e.message || e}</span>`;
+    ['grid','membrane','prodrugCompare','conclusionTable'].forEach(id=>{
+      document.getElementById(id).innerHTML = `<div class="loading">${msg}</div>`;
+    });
+  }
+});
+
+/* ===== core calc ===== */
+function formalCharge(smiles){
+  let charge = 0;
+  const re = /\[([^\]]+)\]/g;
+  let m;
+  while ((m = re.exec(smiles)) !== null) {
+    const c = m[1];
+    const plus = c.match(/\+(\d*)/);
+    const minus = c.match(/-(\d*)/);
+    if (plus)  charge += plus[1]  ? parseInt(plus[1])  : (c.match(/\+/g)||[]).length;
+    if (minus) charge -= minus[1] ? parseInt(minus[1]) : (c.match(/-/g)||[]).length;
+  }
+  return charge;
+}
+
+function analyze(smiles){
+  let mol;
+  try { mol = RDKit.get_mol(smiles); } catch(e){ return null; }
+  if (!mol) return null;
+  try {
+    const d = JSON.parse(mol.get_descriptors());
+    const canon = mol.get_smiles();
+    const svg = mol.get_svg(250, 180);
+    mol.delete();
+
+    const mw   = d.amw ?? d.AMW ?? d.MW ?? d.exactmw ?? 0;
+    const logp = d.CrippenClogP ?? d.crippenClogP ?? 0;
+    const tpsa = d.tpsa ?? d.TPSA ?? 0;
+    const hbd  = d.NumHBD ?? d.lipinskiHBD ?? d.NumHDonors ?? 0;
+    const hba  = d.NumHBA ?? d.lipinskiHBA ?? d.NumHAcceptors ?? 0;
+    const charge = formalCharge(canon);
+
+    const criteria = { mw: mw<=450, logp: logp>=0 && logp<=4, tpsa: tpsa<=90, charge: charge===0 };
+    const score = Object.values(criteria).filter(Boolean).length;
+    const verdict = score===4 ? 'High' : score>=2 ? 'Moderate' : 'Low';
+
+    return { mw, logp, tpsa, hbd, hba, charge, criteria, score, verdict, svg };
+  } catch(e){
+    try { mol.delete(); } catch(_) {}
+    return null;
+  }
+}
+
+function verdictKo(v){ return v==='High'?'높음 (High)':v==='Moderate'?'중간 (Moderate)':'낮음 (Low)'; }
+
+/* ===== UI builders ===== */
+function gauge(label, unit, value, min, max, goodMin, goodMax, decimals){
+  const pct = v => Math.max(0,Math.min(100,((v-min)/(max-min))*100));
+  const inRange = value>=goodMin && value<=goodMax;
+  return `<div class="gauge">
+    <div class="gauge-row"><span>${label}</span><span class="gv ${inRange?'good':'bad'}">${value.toFixed(decimals)}${unit}</span></div>
+    <div class="gauge-track">
+      <div class="gauge-zone" style="left:${pct(goodMin)}%;width:${pct(goodMax)-pct(goodMin)}%"></div>
+      <div class="gauge-marker ${inRange?'good':'bad'}" style="left:${pct(value)}%"></div>
+    </div>
+  </div>`;
+}
+
+function chargeRow(charge){
+  const state = charge<0?'neg':charge===0?'zero':'pos';
+  return `<div class="charge-row">
+    <span class="charge-state ${state==='neg'?'active bad':''}">음전하 (-)</span>
+    <span class="charge-state ${state==='zero'?'active good':''}">중성 (0)</span>
+    <span class="charge-state ${state==='pos'?'active bad':''}">양전하 (+)</span>
+  </div>`;
+}
+
+function renderMolCard(def, r, editable){
+  const editTa = editable ? `<textarea class="smiles" onchange="updateMol('${def.key}',this.value)">${def.smiles}</textarea>` : '';
+  if (!r){
+    return `<div class="mol-card">
+      <span class="role-tag ${def.roleClass||'derivative'}">${def.role||'입력 분자'}</span>
+      <h3>${def.nameKo}</h3><div class="en">${def.nameEn}${def.roleDesc?' · '+def.roleDesc:''}</div>
+      ${editTa}
+      <div class="verdict err">SMILES 파싱 오류 — 구조를 확인하세요</div>
+    </div>`;
+  }
+  return `<div class="mol-card">
+    <span class="role-tag ${def.roleClass||'derivative'}">${def.role||'입력 분자'}</span>
+    <h3>${def.nameKo}</h3><div class="en">${def.nameEn}${def.roleDesc?' · '+def.roleDesc:''}</div>
+    ${editTa}
+    <div class="structure">${r.svg}</div>
+    <div class="gauges">
+      ${gauge('분자량 MW','&nbsp;Da',r.mw,0,600,0,450,1)}
+      ${gauge('지용성 cLogP','',r.logp,-3,7,0,4,2)}
+      ${gauge('극성표면적 TPSA','&nbsp;Ų',r.tpsa,0,160,0,90,1)}
+    </div>
+    ${chargeRow(r.charge)}
+    <div class="ref-info">참고 — 수소결합 공여자(HBD) ${r.hbd}개 · 수용체(HBA) ${r.hba}개</div>
+    <div class="verdict ${r.verdict}">BBB 투과 예측: ${verdictKo(r.verdict)}<br><span style="font-size:12px">(${r.score}/4 기준 충족)</span></div>
+  </div>`;
+}
+
+function renderGrid(){
+  document.getElementById('grid').innerHTML = MOLECULES.map(m => renderMolCard(m, results[m.key], true)).join('');
+}
+
+function updateMol(key, smiles){
+  const def = MOLECULES.find(m => m.key === key);
+  def.smiles = smiles.trim();
+  results[key] = analyze(def.smiles);
+  renderGrid();
+  renderMembrane();
+  renderHypotheses();
+  renderProdrugSpotlight();
+  renderConclusion();
+}
+
+function renderMembrane(){
+  const W=900,H=260,midY=H/2,bandH=56;
+  const colors = { High:'#5FE3B0', Moderate:'#F0C75E', Low:'#FF8C73' };
+  let svg = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto" xmlns="http://www.w3.org/2000/svg">`;
+  svg += `<text x="14" y="22" fill="var(--muted)" font-size="13" font-family="Inter">뇌 (Brain side)</text>`;
+  svg += `<text x="14" y="${H-10}" fill="var(--muted)" font-size="13" font-family="Inter">혈액 (Blood side)</text>`;
+  svg += `<rect x="0" y="${midY-bandH/2}" width="${W}" height="${bandH}" fill="var(--membrane)" opacity="0.35"/>`;
+  for (let x=30;x<W;x+=40){
+    svg += `<circle cx="${x}" cy="${midY-bandH/2}" r="5" fill="var(--membrane)"/>`;
+    svg += `<line x1="${x}" y1="${midY-bandH/2+5}" x2="${x}" y2="${midY}" stroke="var(--membrane)" stroke-width="2.5"/>`;
+    svg += `<circle cx="${x}" cy="${midY+bandH/2}" r="5" fill="var(--membrane)"/>`;
+    svg += `<line x1="${x}" y1="${midY+bandH/2-5}" x2="${x}" y2="${midY}" stroke="var(--membrane)" stroke-width="2.5"/>`;
+  }
+  MOLECULES.forEach((m,i)=>{
+    const r = results[m.key];
+    if (!r) return;
+    const x = 110 + i*200;
+    let y;
+    if (r.verdict==='High') y = midY - bandH/2 - 48;
+    else if (r.verdict==='Moderate') y = midY;
+    else y = midY + bandH/2 + 48;
+    svg += `<circle cx="${x}" cy="${y}" r="22" fill="${colors[r.verdict]}"/>`;
+    svg += `<text x="${x}" y="${y+5}" text-anchor="middle" fill="#0F1B2D" font-size="11" font-weight="600" font-family="IBM Plex Mono">${r.score}/4</text>`;
+    svg += `<text x="${x}" y="${y-32}" text-anchor="middle" fill="var(--text)" font-size="12.5" font-family="Inter">${m.nameKo}</text>`;
+  });
+  svg += `</svg>`;
+  document.getElementById('membrane').innerHTML = svg;
+}
+
+/* ===== hypothesis verification (Step 01) ===== */
+function hypBadge(ok, text){
+  return `<div class="hyp-status ${ok?'good':'bad'}">${ok?'✓ 데이터로 확인됨':'△ 추가 확인 필요'}</div><div class="hyp-detail">${text}</div>`;
+}
+
+function renderHypotheses(){
+  const t=results['thiamine'], f=results['fursul'], b=results['benfo'], s=results['sbenzoyl'];
+  if(!t||!f||!b||!s) return;
+
+  const h1ok = t.verdict !== 'High';
+  document.getElementById('hyp1-status').innerHTML = hypBadge(h1ok,
+    h1ok ? `티아민의 투과 예측은 <strong>'${verdictKo(t.verdict)}'</strong>로, 가설과 일치합니다.`
+         : `티아민도 'High'로 계산되었습니다 — SMILES와 기준값을 다시 점검해보세요.`);
+
+  const bestDeriv = Math.max(f.score, b.score, s.score);
+  const h2ok = bestDeriv > t.score;
+  document.getElementById('hyp2-status').innerHTML = hypBadge(h2ok,
+    h2ok ? `유도체 중 최고 점수(${bestDeriv}/4)가 티아민(${t.score}/4)보다 높아 가설과 일치합니다.`
+         : `유도체들의 점수가 티아민(${t.score}/4)보다 높지 않았습니다 — 구조를 다시 확인해보세요.`);
+
+  const tpsaDrop = b.tpsa - s.tpsa;
+  const h3ok = b.verdict !== s.verdict || Math.abs(tpsaDrop) > 5;
+  document.getElementById('hyp3-status').innerHTML = hypBadge(h3ok,
+    h3ok ? `변환 전후 TPSA가 ${Math.abs(tpsaDrop).toFixed(1)} Ų 변화했고, 예측이 <strong>${verdictKo(b.verdict)} → ${verdictKo(s.verdict)}</strong>로 ${b.verdict===s.verdict?'수치가 개선되어':'등급이 바뀌어'} 전구약물 원리를 보여줍니다.`
+         : `두 형태의 차이가 크지 않게 계산되었습니다 — 인산기 부분의 SMILES를 다시 확인해보세요.`);
+}
+
+/* ===== prodrug spotlight (Step 04) ===== */
+function enzymeArrowSvg(){
+  return `<svg viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
+    <line x1="8" y1="30" x2="78" y2="30" stroke="var(--moderate)" stroke-width="3"/>
+    <path d="M70,18 L90,30 L70,42 Z" fill="var(--moderate)"/>
+    <circle cx="38" cy="30" r="10" fill="none" stroke="var(--block)" stroke-width="2.5"/>
+    <line x1="32" y1="24" x2="44" y2="36" stroke="var(--block)" stroke-width="2.5"/>
+    <line x1="44" y1="24" x2="32" y2="36" stroke="var(--block)" stroke-width="2.5"/>
+  </svg>`;
+}
+
+function prodrugSide(def, r, tag){
+  return `<div class="prodrug-side">
+    <div class="role-tag ${def.roleClass}">${tag}</div>
+    <h3>${def.nameKo}</h3>
+    <div class="structure">${r.svg}</div>
+    <div class="prodrug-stats">
+      <div>TPSA ${r.tpsa.toFixed(1)} Ų</div>
+      <div>cLogP ${r.logp.toFixed(2)}</div>
+      <div>전하 ${r.charge>0?'+':''}${r.charge}</div>
+      <div>${r.score}/4 기준</div>
+    </div>
+    <div class="verdict ${r.verdict}" style="font-size:14px">${verdictKo(r.verdict)}</div>
+  </div>`;
+}
+
+function renderProdrugSpotlight(){
+  const b = results['benfo'], s = results['sbenzoyl'];
+  const compareEl = document.getElementById('prodrugCompare');
+  const sumEl = document.getElementById('prodrugSummary');
+  if(!b || !s){ compareEl.innerHTML = '<div class="loading">계산 중...</div>'; return; }
+
+  compareEl.innerHTML =
+    prodrugSide(MOLECULES.find(m=>m.key==='benfo'), b, '변환 전') +
+    `<div class="prodrug-arrow">${enzymeArrowSvg()}<div class="label">소장 점막의 알칼리성 인산분해효소가<br>인산기(-OPO₃H₂)를 제거</div></div>` +
+    prodrugSide(MOLECULES.find(m=>m.key==='sbenzoyl'), s, '변환 후');
+
+  const tpsaDiff = s.tpsa - b.tpsa;
+  const logpDiff = s.logp - b.logp;
+  sumEl.innerHTML = `<p>인산기가 제거되면서 <strong>TPSA는 ${Math.abs(tpsaDiff).toFixed(1)} Ų ${tpsaDiff<0?'감소':'증가'}</strong>했고,
+  <strong>cLogP는 ${Math.abs(logpDiff).toFixed(2)} ${logpDiff>0?'증가':'감소'}</strong>했습니다.
+  그 결과 BBB 투과 예측은 <strong>${verdictKo(b.verdict)} → ${verdictKo(s.verdict)}</strong>${b.verdict===s.verdict?' (등급은 동일하지만 수치상 개선)':'로 변화'}되었습니다.
+  벤포티아민이 '비활성 운반 형태'로 흡수된 뒤 체내 효소에 의해 '활성 형태'로 바뀌는 전구약물(prodrug) 전략의 화학적 근거를 보여줍니다.</p>`;
+}
+
+/* ===== conclusion (Step 05) ===== */
+function renderConclusion(){
+  const tableEl = document.getElementById('conclusionTable');
+  const textEl = document.getElementById('conclusionText');
+  const rows = MOLECULES.map(m=>{
+    const r = results[m.key];
+    if(!r) return '';
+    return `<tr>
+      <td>${m.nameKo}</td>
+      <td style="color:var(--muted);font-size:12px">${m.role}</td>
+      <td style="font-family:'IBM Plex Mono',monospace">${r.score}/4</td>
+      <td><span class="verdict ${r.verdict}" style="font-size:12px;padding:4px 10px;display:inline-block">${verdictKo(r.verdict)}</span></td>
+    </tr>`;
+  }).join('');
+  tableEl.innerHTML = `<table class="conclusion-table"><thead><tr><th>화합물</th><th>역할</th><th>충족 기준</th><th>BBB 투과 예측</th></tr></thead><tbody>${rows}</tbody></table>`;
+
+  const t=results['thiamine'], f=results['fursul'], b=results['benfo'], s=results['sbenzoyl'];
+  if(!t||!f||!b||!s) return;
+  const matchCount = [t.verdict!=='High', Math.max(f.score,b.score,s.score)>t.score, b.verdict!==s.verdict||Math.abs(b.tpsa-s.tpsa)>5].filter(Boolean).length;
+  textEl.innerHTML = `<p>3가지 가설 중 <strong>${matchCount}개가 계산 결과와 일치</strong>했습니다.
+  분자 구조의 작은 변화(이온화 상태, 인산기 유무, 측쇄 길이 등)가 MW · cLogP · TPSA · 전하라는 구체적인 숫자로 나타나고,
+  이 숫자들이 모여 '뇌까지 전달될 수 있는가'라는 생물학적 질문에 대한 답을 제시합니다.
+  특히 벤포티아민 → S-벤조일티아민의 변화는, 약물 전달 시스템(DDS)에서 분자 구조 설계가 왜 중요한지를 보여주는 구체적인 사례입니다.</p>`;
+}
+
+/* ===== custom explorer (UPDATED) ===== */
+function setCustom(smiles, name = '사용자 입력 분자') {
+  document.getElementById('customSmiles').value = smiles;
+  currentCustomName = name;
+  analyzeCustom();
+}
+
+function analyzeCustom(){
+  const smiles = document.getElementById('customSmiles').value.trim();
+  const out = document.getElementById('customResult');
+  if (!smiles){ out.innerHTML = ''; return; }
+  
+  if (!MOLECULES_PRESETS.includes(smiles)) {
+     currentCustomName = '사용자 입력 분자';
+  }
+
+  const r = analyze(smiles);
+  out.innerHTML = `<div style="max-width:340px">${renderMolCard({nameKo:currentCustomName, nameEn:'Custom input', smiles, key:'custom', role:'직접 계산', roleClass:'derivative'}, r, false)}</div>`;
+}
+
+const MOLECULES_PRESETS = [
+  'CN1C=NC2=C1C(=O)N(C(=O)N2C)C',
+  'CC(C)CC1=CC=C(C=C1)C(C)C(=O)O',
+  'C1=CC(=C(C=C1CCN)O)O',
+  'CC1(C(N2C(S1)C(C2=O)NC(=O)CC3=CC=CC=C3)C(=O)O)C',
+  'C(C(C1C(=C(C(=O)O1)O)O)O)O'
+];
+</script>
+</body>
+</html>
